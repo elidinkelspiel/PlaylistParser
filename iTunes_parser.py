@@ -3,7 +3,8 @@ __author__='edinkelspiel'
 
 import xml.etree.ElementTree as ElementTree
 
-docroot = ElementTree.parse('MyXML').getroot()
+def set_docroot(file):
+    return ElementTree.parse(file).getroot()
 
 class Song:
     def __init__(self, name, album, artist, album_artist, year):
@@ -16,16 +17,19 @@ class Song:
     def to_string(self):
         return "%s | %s | %s | %s | %s" %(self.name, self.album, self.artist, self.album_artist, self.year)
 
+    def encoded_string(self):
+        return self.to_string().encode('utf-8')
+
 def parse_info_to_song(import_dict):
     import_dict["Name"]
     return Song(import_dict["Name"], import_dict["Album"], import_dict["Artist"], import_dict["Album Artist"], import_dict["Year"])
 
-def pass_songs_to_list():
+def pass_songs_to_list(docroot):
     songlist = []
     for child in docroot:
         for dict in child:
             for a in dict:
-                previous = "kasdfjkhadsijfhjadhsbfhiasdbcoisda"
+                previous = None
                 important_info = {
                     "Name" : "N/A",
                     "Album" : "N/A",
@@ -42,5 +46,7 @@ def pass_songs_to_list():
                     songlist.append(parse_info_to_song(important_info))
     return songlist
 
-for song in pass_songs_to_list():
-    print song.to_string()
+k = 0
+for song in pass_songs_to_list(set_docroot("myXML.xml")):
+    k += 1
+    print k, song.to_string()
